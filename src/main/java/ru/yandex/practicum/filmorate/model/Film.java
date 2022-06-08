@@ -1,29 +1,37 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.yandex.practicum.filmorate.validators.ReleaseDate;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
-@Getter
-@Setter
-@Builder
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-@RequiredArgsConstructor
-
+@Data
+@NoArgsConstructor
 public class Film {
-    @EqualsAndHashCode.Exclude
+
+    public static final String MAX_DESCRIPTION_LENGTH = "Описание не должно превышать 200 символов";
+    public static final String MIN_RELEASE_DATE = "Дата выхода фильма не должна быть раньше 1895-12-28";
+    public static final String MIN_DURATION = "Длительность фильма должна быть больше 0";
+
     private int id;
-    @NotNull @NotBlank (message = "Поле не должно быть пустым")
+
+    @NotNull
+    @NotBlank(message = "Поле не должно быть пустым")
     private String name;
-    @Size(max = 200, message = "Описание не должно превышать 200 символов")
+
+    @Size(max = 200, message = MAX_DESCRIPTION_LENGTH)
     private String description;
-    @ReleaseDate (message = "Дата выхода фильма не должна быть раньше 1895-12-28")
+
+    @ReleaseDate(message = MIN_RELEASE_DATE)
     private LocalDate releaseDate;
-    @Positive (message = "Длительность фильма должна быть больше 0")
+
+    @Positive(message = MIN_DURATION)
     private Long duration;
+
     private int rate;
 }

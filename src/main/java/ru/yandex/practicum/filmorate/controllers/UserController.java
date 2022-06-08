@@ -1,39 +1,39 @@
 package ru.yandex.practicum.filmorate.controllers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.model.UserIdGenerator;
-
+import ru.yandex.practicum.filmorate.service.IdGenerator;
 
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
+@Slf4j
 @Validated
 @RestController
 @RequestMapping("/users")
-public class UserController extends AbstractController<User> {
+public class UserController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private final Map<Integer, User> users = new HashMap<>();
 
-    private final HashMap<Integer, User> users = new HashMap<>();
+    @Autowired
+    IdGenerator userIdGenerator;
 
-    @Override
     @GetMapping
     public Collection<User> getAll() {
         log.info("Количество пользователей в настоящий момент - {}", users.size());
         return users.values();
     }
 
-    @Override
     @PostMapping
     public User create(@Valid @RequestBody User user) throws ValidationException {
-        user.setId(UserIdGenerator.generateId());
-        log.info("Сохраняемый объект: {}", user );
+        user.setId(userIdGenerator.generateUserId());
+        log.info("Сохраняемый объект: {}", user);
         if (isExist(user)) {
             log.info("Пользователь с таким email {} уже существует ", user.getEmail());
             throw new ValidationException("Пользователь с таким email уже существует " + user.getEmail());
@@ -45,10 +45,9 @@ public class UserController extends AbstractController<User> {
         return user;
     }
 
-    @Override
     @PutMapping
     public User update(@Valid @RequestBody User user) throws ValidationException {
-        log.info("Обновляемый объект: {}", user );
+        log.info("Обновляемый объект: {}", user);
         if (!users.containsKey(user.getId())) {
             throw new ValidationException("Такого пользователя не существует, проверьте правильность или наличие id");
         }
