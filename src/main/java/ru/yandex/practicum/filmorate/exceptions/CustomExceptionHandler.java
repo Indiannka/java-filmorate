@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.exceptions;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,13 +34,22 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         details.add(ex.getLocalizedMessage());
         ErrorResponse error = new ErrorResponse("Check response parameters", details);
         log.info(error.getDetails().toString());
-        return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public final ResponseEntity<Object> handleNotFoundException(NotFoundException ex, WebRequest request) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        ErrorResponse error = new ErrorResponse("Check response parameters", details);
+        log.info(error.getDetails().toString());
+        return new ResponseEntity(error, HttpStatus.NOT_FOUND);
     }
 
     @Override
-    protected ResponseEntity handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                          HttpHeaders headers, HttpStatus status,
-                                                          WebRequest request) {
+    protected @NonNull ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                           HttpHeaders headers, HttpStatus status,
+                                                                           WebRequest request) {
         List<String> details = new ArrayList<>();
         for (ObjectError error : ex.getBindingResult().getAllErrors()) {
             details.add(error.getDefaultMessage());
