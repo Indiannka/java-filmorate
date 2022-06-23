@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.exceptions;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,7 @@ import java.util.List;
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
+    public final ResponseEntity handleAllExceptions(Exception ex, WebRequest request) {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
         ErrorResponse error = new ErrorResponse("Server Error", details);
@@ -29,7 +28,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ValidationException.class)
-    public final ResponseEntity<Object> handleValidationException(ValidationException ex, WebRequest request) {
+    public final ResponseEntity handleValidationException(ValidationException ex, WebRequest request) {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
         ErrorResponse error = new ErrorResponse("Check response parameters", details);
@@ -38,7 +37,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public final ResponseEntity<Object> handleNotFoundException(NotFoundException ex, WebRequest request) {
+    public final ResponseEntity handleNotFoundException(NotFoundException ex, WebRequest request) {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
         ErrorResponse error = new ErrorResponse("Check response parameters", details);
@@ -47,9 +46,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected @NonNull ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                           HttpHeaders headers, HttpStatus status,
-                                                                           WebRequest request) {
+    protected ResponseEntity handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                          HttpHeaders headers, HttpStatus status,
+                                                          WebRequest request) {
         List<String> details = new ArrayList<>();
         for (ObjectError error : ex.getBindingResult().getAllErrors()) {
             details.add(error.getDefaultMessage());

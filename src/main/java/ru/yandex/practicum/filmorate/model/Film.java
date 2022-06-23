@@ -17,7 +17,7 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id", "name", "description", "releaseDate", "duration"}, callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class Film extends BaseEntity {
 
     public static final String MAX_DESCRIPTION_LENGTH = "Описание не должно превышать 200 символов";

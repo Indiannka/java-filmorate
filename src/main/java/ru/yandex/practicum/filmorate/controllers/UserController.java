@@ -19,17 +19,17 @@ import java.util.Collection;
 @RequestMapping("/users")
 public class UserController {
 
-    private final Storage<User> storage;
+    private final Storage<User> userStorage;
     private final UserService userService;
 
     @GetMapping
     public Collection<User> getAll() {
-        return storage.getAll();
+        return userStorage.getAll();
     }
 
     @GetMapping("/{id}")
     public User getById(@PathVariable("id") long userId) {
-        return storage.getById(userId);
+        return userStorage.getById(userId);
     }
 
     @GetMapping("/{id}/friends")
@@ -39,17 +39,17 @@ public class UserController {
 
     @PostMapping
     public User create(@Valid @RequestBody User user) {
-        return storage.create(user);
+        return userStorage.create(user);
     }
 
     @PutMapping
     public User update(@Valid @RequestBody User user) throws ValidationException {
-        return storage.update(user);
+        return userStorage.update(user);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") long userId) {
-        storage.delete(userId);
+        userStorage.delete(userId);
     }
 
     @PutMapping("/{id}/friends/{friendId}")

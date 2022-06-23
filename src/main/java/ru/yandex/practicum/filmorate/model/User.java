@@ -16,8 +16,7 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id", "name", "birthday", "login", "email"}, callSuper = false)
-
+@EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity {
 
     private Long id;
@@ -25,6 +24,7 @@ public class User extends BaseEntity {
 
     @JsonIgnore
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<User> friends = new HashSet<>();
 
     @Past

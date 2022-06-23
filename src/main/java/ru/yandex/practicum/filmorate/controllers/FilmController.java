@@ -19,32 +19,32 @@ import java.util.Collection;
 @RequestMapping("/films")
 public class FilmController {
 
-    private final Storage<Film> storage;
+    private final Storage<Film> filmStorage;
     private final FilmService filmService;
 
     @GetMapping
     public Collection<Film> getAll() {
-        return storage.getAll();
+        return filmStorage.getAll();
     }
 
     @GetMapping("/{id}")
     public Film getById(@PathVariable("id") long filmId) {
-        return storage.getById(filmId);
+        return filmStorage.getById(filmId);
     }
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        return storage.create(film);
+        return filmStorage.create(film);
     }
 
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
-        return storage.update(film);
+        return filmStorage.update(film);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") long filmId) {
-        storage.delete(filmId);
+        filmStorage.delete(filmId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
