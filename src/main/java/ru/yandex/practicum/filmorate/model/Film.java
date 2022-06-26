@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import ru.yandex.practicum.filmorate.validators.ReleaseDate;
 
 import javax.validation.constraints.NotBlank;
@@ -33,15 +32,14 @@ public class Film extends BaseEntity {
     @Size(max = 200, message = MAX_DESCRIPTION_LENGTH)
     private String description;
 
+    @JsonIgnore
+    private Set<Long> usersLikes = new HashSet<>();
+
     @ReleaseDate(message = MIN_RELEASE_DATE)
     private LocalDate releaseDate;
 
     @Positive(message = MIN_DURATION)
     private Long duration;
-
-    @JsonIgnore
-    @ToString.Exclude
-    private Set<User> usersLikes = new HashSet<>();
 
     private int rate;
 }
