@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
@@ -8,13 +10,19 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
-public class User {
+@EqualsAndHashCode(callSuper = true)
+public class User extends BaseEntity {
 
-    private int id;
+    private Long id;
     private String name;
+
+    @JsonIgnore
+    private Set<Long> friends = new HashSet<>();
 
     @Past
     private LocalDate birthday;

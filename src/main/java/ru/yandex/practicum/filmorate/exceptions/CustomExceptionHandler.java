@@ -19,33 +19,42 @@ import java.util.List;
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
+    public final ResponseEntity<ErrorResponse> handleAllExceptions(Exception ex, WebRequest request) {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
         ErrorResponse error = new ErrorResponse("Server Error", details);
         log.info(error.getDetails().toString());
-        return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(ValidationException.class)
-    public final ResponseEntity<Object> handleValidationException(ValidationException ex, WebRequest request) {
+    public final ResponseEntity<ErrorResponse> handleValidationException(ValidationException ex, WebRequest request) {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
         ErrorResponse error = new ErrorResponse("Check response parameters", details);
         log.info(error.getDetails().toString());
-        return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public final ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex, WebRequest request) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        ErrorResponse error = new ErrorResponse("Check response parameters", details);
+        log.info(error.getDetails().toString());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @Override
-    protected ResponseEntity handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                          HttpHeaders headers, HttpStatus status,
-                                                          WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers, HttpStatus status,
+                                                                  WebRequest request) {
         List<String> details = new ArrayList<>();
         for (ObjectError error : ex.getBindingResult().getAllErrors()) {
             details.add(error.getDefaultMessage());
         }
         ErrorResponse error = new ErrorResponse("Validation Failed", details);
         log.info(error.getDetails().toString());
-        return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }
